@@ -1,7 +1,5 @@
-import { Card, CardBody, CardFooter } from "@heroui/card";
-import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { Chip } from "@heroui/chip";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
