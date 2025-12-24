@@ -1,5 +1,27 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 @layer theme, base, components, utilities;
+
+/* Custom marker styles */
+.custom-marker {
+  z-index: 1000 !important;
+}
+
+.custom-marker div {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
 
 /* Be careful with the paths turbo mono repos install heroui in the root */
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';

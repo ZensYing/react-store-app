@@ -5,17 +5,43 @@ import { Image } from "@heroui/image";
 import { Divider } from "@heroui/divider";
 import { Chip } from "@heroui/chip";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 import { useCart } from "@/contexts/cart-context";
+import { DeliveryAddressSelector, type DeliveryAddress } from "@/components/delivery-address-selector";
 
 export default function OrdersPage() {
     const { cart, updateQuantity, removeFromCart, getTotalPrice, clearCart } =
         useCart();
+    const [showAddressSelector, setShowAddressSelector] = useState(false);
+    const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress | null>(null);
 
     const totalPrice = getTotalPrice();
     const deliveryFee = 5.0;
     const tax = totalPrice * 0.1;
     const grandTotal = totalPrice + deliveryFee + tax;
+
+    const handlePlaceOrder = () => {
+        if (!deliveryAddress) {
+            setShowAddressSelector(true);
+        } else {
+            // Process order with delivery address
+            alert(`Order placed! Delivering to: ${deliveryAddress.address}`);
+            clearCart();
+            setDeliveryAddress(null);
+        }
+    };
+
+    const handleAddressConfirm = (address: DeliveryAddress) => {
+        setDeliveryAddress(address);
+        setShowAddressSelector(false);
+        // Automatically place order after address is confirmed
+        setTimeout(() => {
+            alert(`Order placed! Delivering to: ${address.address}\nPhone: ${address.phone}`);
+            clearCart();
+            setDeliveryAddress(null);
+        }, 500);
+    };
 
     if (cart.length === 0) {
         return (
@@ -278,10 +304,11 @@ export default function OrdersPage() {
 
                     <CardFooter className="pt-0 px-5 pb-5 relative z-10">
                         <Button
-                            className="w-full text-white font-bold text-base "
+                            className="w-full text-white font-bold text-base"
                             color="default"
                             size="lg"
                             variant="flat"
+                            onPress={handlePlaceOrder}
                         >
                             <svg
                                 className="w-5 h-5"
@@ -301,6 +328,14 @@ export default function OrdersPage() {
                     </CardFooter>
                 </Card>
             </motion.div>
+
+            {/* Delivery Address Selector Modal */}
+            {showAddressSelector && (
+                <DeliveryAddressSelector
+                    onCancel={() => setShowAddressSelector(false)}
+                    onConfirm={handleAddressConfirm}
+                />
+            )}
         </div>
     );
 }
